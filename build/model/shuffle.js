@@ -1,4 +1,17 @@
-const studentList = [];
+import fs, { readFileSync } from 'fs';
+import path from 'path';
+
+
+function readAndParseJson(path) {
+  const jsonData = fs.readFileSync(path, 'utf8');
+  const parsedData = JSON.parse(jsonData);
+  return parsedData;
+}
+
+const studentList = readAndParseJson('data/studentList.json');
+console.log(studentList.length);
+
+console.log(studentList.length);
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
