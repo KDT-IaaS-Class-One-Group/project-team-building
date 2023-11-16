@@ -1,65 +1,37 @@
+/**
+ * 이 모듈은 팀 빌딩 프로젝트에서 학생 목록을 셔플하고, 팀을 생성하는 역할을 합니다.
+ * shuffleArray, readAndParseJson, createTeams 모듈에 의존합니다.
+ *
+ * @module shuffle
+ * @requires fs
+ * @requires path
+ * @requires ./modules/shuffleArray.js
+ * @requires ./modules/readAndParseJson.js
+ * @requires ./modules/createTeams.js
+ */
+
+// built-in module
 import fs, { readFileSync } from 'fs';
 import path from 'path';
 
+// custom module
+import shuffleArray from './modules/shuffleArray.js';
+import readAndParseJson from './modules/readAndParseJson.js';
+import createTeams from './modules/createTeams.js';
 
-function readAndParseJson(path) {
-  const jsonData = fs.readFileSync(path, 'utf8');
-  const parsedData = JSON.parse(jsonData);
-  return parsedData;
-}
-
+/**
+ * 학생 목록을 셔플하고, 팀을 생성합니다.
+ *
+ * @type {Array}
+ * @exports teams
+ */
 const studentList = readAndParseJson('data/studentList.json');
-console.log(studentList.length);
-
-console.log(studentList.length);
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-
-// 배열 셔플
 const shuffledArray = shuffleArray(studentList);
-console.log(shuffledArray);
+const teams = createTeams(shuffledArray, true);
 
-function createTeams(array) {
-  const shuffled = shuffleArray(array);
-  const teams = [
-    shuffled.slice(0, 4),
-    shuffled.slice(4, 8),
-    shuffled.slice(8, 12),
-    shuffled.slice(12)
-  ];
+console.log(studentList.length); // readAndParseJson 함수가 반환한 배열의 길이
+console.log(shuffledArray); // shuffleArray 함수가 반환한 배열
+console.log(shuffledArray.length); // shuffleArray 함수가 반환한 배열의 길이
+console.log(teams); // createTeams 함수가 반환한 배열
 
-  // 각 팀의 첫 번째 원소에 '팀장-' 추가
-  teams.forEach(team => {
-    if (team.length > 0) {
-      team[0] = '팀장-' + team[0];
-    }
-  });
-
-  return teams;
-}
-// 팀 생성 및 출력
-const teams = createTeams(shuffledArray);
-console.log(teams);
-
-// function generateShuffledArrays(array, times) {
-//   const result = [];
-//   for (let i = 0; i < times; i++) {
-//     const shuffledArray = shuffleArray([...array]);
-//     result.push(shuffledArray);
-//   }
-//   return result;
-// }
-
-// const shuffledArrays = generateShuffledArrays(studentList, 100);
-// console.log(shuffledArrays);
-// import fs from 'fs';
-
-// fs.writeFileSync('shuffledArrays.json', JSON.stringify(shuffledArrays, null, 2), (err) => {
-//   if (err) throw err;
-//   console.log('Data written to file');
-// });
+export default teams; // teams 배열을 내보냅니다.
